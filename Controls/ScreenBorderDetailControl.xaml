@@ -1,0 +1,151 @@
+<UserControl
+	x:Class="OneQuick.Controls.ScreenBorderDetailControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:OneQuick.Controls" 
+    xmlns:c="clr-namespace:OneQuick.Converter" 
+    xmlns:cfg="clr-namespace:OneQuick.Config">
+    <FrameworkElement.Resources>
+        <ResourceDictionary>
+            <c:BoolToVisibilityConverter
+				x:Key="BoolToVisibility" />
+            <c:NullToBoolConverter
+				x:Key="NullToBool" />
+        </ResourceDictionary>
+    </FrameworkElement.Resources>
+    <Grid
+		DataContext="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}"
+		IsEnabled="{Binding ScreenBorder, Converter={StaticResource NullToBool}}">
+        <FrameworkElement.Resources>
+            <ResourceDictionary>
+                <Style
+					TargetType="{x:Type FrameworkElement}"
+					x:Key="C1">
+                    <Setter
+						Property="Width"
+						Value="80" />
+                </Style>
+                <Style
+					TargetType="{x:Type FrameworkElement}"
+					x:Key="C2" />
+            </ResourceDictionary>
+        </FrameworkElement.Resources>
+        <StackPanel
+			Orientation="Vertical">
+            <FrameworkElement.Resources>
+                <ResourceDictionary>
+                    <Style
+						TargetType="{x:Type DockPanel}"
+						x:Key="{x:Type DockPanel}">
+                        <Setter
+							Property="Margin"
+							Value="10,5" />
+                    </Style>
+                </ResourceDictionary>
+            </FrameworkElement.Resources>
+            <DockPanel
+				Margin="10,15,10,5">
+                <FrameworkElement.Resources>
+                    <ResourceDictionary>
+                        <Style
+							TargetType="{x:Type TextBlock}"
+							x:Key="{x:Type TextBlock}">
+                            <Setter
+								Property="FontSize"
+								Value="20" />
+                        </Style>
+                    </ResourceDictionary>
+                </FrameworkElement.Resources>
+                <TextBlock
+					Text="ScreenBorderTipPrefix" />
+                <TextBlock
+					Text="{Binding ScreenBorder.Position}" />
+            </DockPanel>
+            <DockPanel>
+                <CheckBox
+					Content="Enable"
+					IsChecked="{Binding ScreenBorder.Enable}" />
+            </DockPanel>
+            <DockPanel>
+                <TextBlock
+					Style="{StaticResource C1}"
+					Text="Wheel" />
+                <StackPanel
+					Style="{StaticResource C2}">
+                    <ComboBox
+						Name="WheelComboBox"
+						SelectionChanged="WheelComboBox_SelectionChanged">
+                        <ComboBoxItem
+							Tag="None"
+							Content="None" />
+                        <ComboBoxItem
+							Tag="Volume"
+							Content="Volume" />
+                        <ComboBoxItem
+							Tag="Media"
+							Content="Media" />
+                        <ComboBoxItem
+							Tag="Tab"
+							Content="Tab" />
+                        <ComboBoxItem
+							Tag="Window"
+							Content="Apps" />
+                        <ComboBoxItem
+							Tag="VirtualDesktop"
+							Content="Virtual Desktop" />
+                        <ComboBoxItem
+							Tag="PageDownUp"
+							Content="Page Down/Up" />
+                        <ComboBoxItem
+							Tag="HomeEnd"
+							Content="Home/End" />
+                        <ComboBoxItem
+							Tag="Custom"
+							Content="Custom" />
+                    </ComboBox>
+                    <DockPanel
+						Visibility="{Binding IsWheelCustomVisibility}">
+                        <TextBlock
+							Style="{StaticResource C1}"
+							Text="WheelUp" />
+                        <local:OperationSingleControl
+							Operation="{Binding ScreenBorder.WheelUp}" />
+                    </DockPanel>
+                    <DockPanel
+						Visibility="{Binding IsWheelCustomVisibility}">
+                        <TextBlock
+							Style="{StaticResource C1}"
+							Text="WheelDown" />
+                        <local:OperationSingleControl
+							Operation="{Binding ScreenBorder.WheelDown}" />
+                    </DockPanel>
+                </StackPanel>
+            </DockPanel>
+            <DockPanel>
+                <TextBlock
+					Style="{StaticResource C1}"
+					Text="WheelClick" />
+                <local:OperationSingleControl
+					Operation="{Binding ScreenBorder.WheelClick}" />
+            </DockPanel>
+            <DockPanel
+				Height="10" />
+            <DockPanel>
+                <TextBlock
+					Style="{StaticResource C1}">
+					<TextBlock
+						Text="NoneMove" /> <TextBlock>(beta)</TextBlock></TextBlock>
+                <local:OperationSingleControl
+					Operation="{Binding ScreenBorder.NonMove}" />
+            </DockPanel>
+            <DockPanel
+				Visibility="Collapsed">
+                <TextBlock
+					Style="{StaticResource C1}">WheelHorizontal</TextBlock>
+                <Grid />
+            </DockPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

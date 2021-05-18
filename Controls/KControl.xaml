@@ -1,0 +1,46 @@
+<UserControl
+	x:Class="OneQuick.Controls.KControl" 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:OneQuick.Controls">
+    <Grid
+		DataContext="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}">
+        <FrameworkElement.ContextMenu>
+            <ContextMenu>
+                <MenuItem
+					IsEnabled="False"
+					Header="kc_confirm_clear" />
+                <MenuItem
+					Header="Enter, Backspace"
+					IsCheckable="True"
+					IsChecked="{Binding EnterBackspacePlanChecked}" />
+                <MenuItem
+					Header="F1, F2"
+					IsCheckable="True"
+					IsChecked="{Binding F1F2PlanChecked}" />
+                <Separator />
+                <MenuItem
+					Header="kc_clear"
+					Click="ClearKey" />
+            </ContextMenu>
+        </FrameworkElement.ContextMenu>
+        <Border
+			Name="Border"
+			Background="#FF000000"
+			Padding="1">
+            <Button
+				Name="Button"
+				Background="#FFFFFFFF"
+				HorizontalContentAlignment="Stretch"
+				VerticalContentAlignment="Stretch"
+				BorderThickness="0"
+				Click="Button_Click">
+                <TextBlock
+					Text="{Binding KString}"
+					HorizontalAlignment="{Binding KTextAlignment}" />
+            </Button>
+        </Border>
+    </Grid>
+</UserControl>

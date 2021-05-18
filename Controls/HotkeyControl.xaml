@@ -1,0 +1,47 @@
+<UserControl
+	x:Class="OneQuick.Controls.HotkeyControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:OneQuick.Controls"
+	DataContext="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}">
+    <FrameworkElement.Resources>
+        <ResourceDictionary>
+            <DataTemplate
+				x:Key="ListBoxItemTemplate">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition
+							Width="30" />
+                        <ColumnDefinition
+							Width="30" />
+                    </Grid.ColumnDefinitions>
+                    <local:KControl
+						K="{Binding KeyData}" />
+                    <Button
+						Grid.Column="1" />
+                    <CheckBox
+						Grid.Column="2"
+						IsChecked="{Binding Handled}" />
+                </Grid>
+            </DataTemplate>
+        </ResourceDictionary>
+    </FrameworkElement.Resources>
+    <StackPanel
+		Orientation="Vertical">
+        <StackPanel
+			Orientation="Horizontal">
+            <Button>+</Button>
+            <Button>-</Button>
+        </StackPanel>
+        <ListBox
+			Name="HotkeysListbox"
+			ItemTemplate="{StaticResource ListBoxItemTemplate}"
+			ItemsSource="{Binding HotkeyTrigger.Events}" />
+        <TextBlock
+			Text="hkc_multiple_tip"
+			Visibility="{Binding MultipleTipVisibility}" />
+    </StackPanel>
+</UserControl>

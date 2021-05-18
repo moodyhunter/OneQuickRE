@@ -1,0 +1,52 @@
+<UserControl
+	x:Class="OneQuick.Controls.Link" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  >
+    <WrapPanel
+		Orientation="Horizontal"
+		DataContext="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}">
+        <TextBlock
+			Text="{Binding PreText}" />
+        <Grid
+			Width="{Binding UriMargin}" />
+        <TextBlock>
+			<Hyperlink
+				NavigateUri="{Binding UriText}"
+				RequestNavigate="Hyperlink_RequestNavigate">
+				<FrameworkContentElement.Style>
+					<Style
+						TargetType="{x:Type Hyperlink}">
+						<Style.Triggers>
+							<MultiDataTrigger>
+								<MultiDataTrigger.Conditions>
+									<Condition
+										Value="False"
+										Binding="{Binding LinkUnderline}" />
+									<Condition
+										Value="False"
+										Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" />
+								</MultiDataTrigger.Conditions>
+								<Setter
+									Property="TextDecorations"
+									Value="{x:Null}" />
+							</MultiDataTrigger>
+							<Trigger
+								Property="ContentElement.IsMouseOver"
+								Value="False">
+								<Setter
+									Property="Foreground"
+									Value="{Binding UriForeground}" />
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+				</FrameworkContentElement.Style>
+				<TextBlock
+					Text="{Binding UriText}" />
+			</Hyperlink>
+		</TextBlock>
+        <Grid
+			Width="{Binding UriMargin}"
+			Visibility="{Binding PostTextVisibility}" />
+        <TextBlock
+			Text="{Binding PostText}"
+			Visibility="{Binding PostTextVisibility}" />
+    </WrapPanel>
+</UserControl>

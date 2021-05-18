@@ -1,0 +1,325 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D1F367F2-8855-4C5F-AE4D-91F79112E8B7}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>OneQuick</RootNamespace>
+    <AssemblyName>OneQuick</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Release\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>OneQuick.App</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>OneQuick.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+    <Compile Include="Config\BuildinFuncs.cs" />
+    <Compile Include="Config\ConfigEntry.cs" />
+    <Compile Include="Config\ConfigFileEntry.cs" />
+    <Compile Include="Config\Configuration.cs" />
+    <Compile Include="Config\HotkeyRemap.cs" />
+    <Compile Include="Config\KeyMappingItem.cs" />
+    <Compile Include="Config\KeyMappingX.cs" />
+    <Compile Include="Config\Preference.cs" />
+    <Compile Include="Config\QuickSearchEntry.cs" />
+    <Compile Include="Config\QuickSearchGroupCollection.cs" />
+    <Compile Include="Config\ReplacePhrase.cs" />
+    <Compile Include="Config\ScreenBorder.cs" />
+    <Compile Include="Config\ScreenBorderPackage.cs" />
+    <Compile Include="Config\VersionItem.cs" />
+    <Compile Include="Config\WheelOperation.cs" />
+    <Compile Include="Config\WheelOperationExt.cs" />
+    <Compile Include="Controls\HotkeyControl.xaml.cs">
+      <DependentUpon>HotkeyControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\KControl.xaml.cs">
+      <DependentUpon>KControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Link.xaml.cs">
+      <DependentUpon>Link.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ListViewX.xaml.cs">
+      <DependentUpon>ListViewX.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\OperationsControl.xaml.cs">
+      <DependentUpon>OperationsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\OperationSingleControl.xaml.cs">
+      <DependentUpon>OperationSingleControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\positionwrapper.xaml.cs" />
+    <Compile Include="Controls\ScreenBorderButtonControl.xaml.cs">
+      <DependentUpon>ScreenBorderButtonControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ScreenBorderDetailControl.xaml.cs">
+      <DependentUpon>ScreenBorderDetailControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\X.cs" />
+    <Compile Include="Converter\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converter\DebugDataBindingConverter.cs" />
+    <Compile Include="Converter\NullToBoolConverter.cs" />
+    <Compile Include="Converter\NullToVisibilityConverter.cs" />
+    <Compile Include="Core\Conditions\Condition.cs" />
+    <Compile Include="Core\Conditions\ConditionList.cs" />
+    <Compile Include="Core\Conditions\MouseAppPosCodition.cs" />
+    <Compile Include="Core\Conditions\MouseScreenPosCodition.cs" />
+    <Compile Include="Core\Conditions\PositionCodition.cs" />
+    <Compile Include="Core\Conditions\PositionEnum.cs" />
+    <Compile Include="Core\Conditions\PositionWrapper.cs" />
+    <Compile Include="Core\Conditions\ProgramCodition.cs" />
+    <Compile Include="Core\EntryServer.cs" />
+    <Compile Include="Core\Internal.cs" />
+    <Compile Include="Core\Operations\BuildinOperation.cs" />
+    <Compile Include="Core\Operations\BuildinOperationEnum.cs" />
+    <Compile Include="Core\Operations\DelegateOperation.cs" />
+    <Compile Include="Core\Operations\Operation.cs" />
+    <Compile Include="Core\Operations\OperationList.cs" />
+    <Compile Include="Core\Operations\PopMsg.cs" />
+    <Compile Include="Core\Operations\RunCmd.cs" />
+    <Compile Include="Core\Operations\SendKey.cs" />
+    <Compile Include="Core\Operations\SendText.cs" />
+    <Compile Include="Core\Operations\SleepMilliseconds.cs" />
+    <Compile Include="Core\TriggerExt.cs" />
+    <Compile Include="Core\Triggers\HotkeySingle.cs" />
+    <Compile Include="Core\Triggers\HotkeyTrigger.cs" />
+    <Compile Include="Core\Triggers\InputTrigger.cs" />
+    <Compile Include="Core\Triggers\ModSide.cs" />
+    <Compile Include="Core\Triggers\NonMoveTrigger.cs" />
+    <Compile Include="Core\Triggers\Trigger.cs" />
+    <Compile Include="Core\Triggers\TriggerSeqT.cs" />
+    <Compile Include="Core\Triggers\TriggerType.cs" />
+    <Compile Include="DefConfig.cs" />
+    <Compile Include="G.cs" />
+    <Compile Include="Helper.cs" />
+    <Compile Include="K.cs" />
+    <Compile Include="Kwrapper.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="NativeMethods.cs" />
+    <Compile Include="Notification\MouseButtons.cs" />
+    <Compile Include="Notification\NotificationActivator.cs" />
+    <Compile Include="Notification\NotificationUserInput.cs" />
+    <Compile Include="Notification\Notify.cs" />
+    <Compile Include="Notification\TrayIcon.cs" />
+    <Compile Include="Notification\TrayMenuItem.cs" />
+    <Compile Include="ObservableCollectionX.cs" />
+    <Compile Include="SysX\Cmd.cs" />
+    <Compile Include="SysX\Info.cs" />
+    <Compile Include="SysX\Reg.cs" />
+    <Compile Include="SysX\Win.cs" />
+    <Compile Include="window\windowinfo.xaml.cs" />
+    <Compile Include="WindowsEvents\EventsServer.cs" />
+    <Compile Include="WindowsEvents\HotKeyEventArgs.cs" />
+    <Compile Include="WindowsEvents\KeyEventArgs.cs" />
+    <Compile Include="WindowsEvents\KeyPressEventArgs.cs" />
+    <Compile Include="WindowsEvents\MouseEventArgs.cs" />
+    <Compile Include="WindowsInput\IInputDeviceStateAdaptor.cs" />
+    <Compile Include="WindowsInput\IInputMessageDispatcher.cs" />
+    <Compile Include="WindowsInput\IInputSimulator.cs" />
+    <Compile Include="WindowsInput\IKeyboardSimulator.cs" />
+    <Compile Include="WindowsInput\IMouseSimulator.cs" />
+    <Compile Include="WindowsInput\InputBuilder.cs" />
+    <Compile Include="WindowsInput\InputSimulator.cs" />
+    <Compile Include="WindowsInput\KeyboardSimulator.cs" />
+    <Compile Include="WindowsInput\MouseButton.cs" />
+    <Compile Include="WindowsInput\MouseSimulator.cs" />
+    <Compile Include="WindowsInput\Native\HARDWAREINPUT.cs" />
+    <Compile Include="WindowsInput\Native\INPUT.cs" />
+    <Compile Include="WindowsInput\Native\InputType.cs" />
+    <Compile Include="WindowsInput\Native\KEYBDINPUT.cs" />
+    <Compile Include="WindowsInput\Native\KeyboardFlag.cs" />
+    <Compile Include="WindowsInput\Native\MouseFlag.cs" />
+    <Compile Include="WindowsInput\Native\MOUSEINPUT.cs" />
+    <Compile Include="WindowsInput\Native\MOUSEKEYBDHARDWAREINPUT.cs" />
+    <Compile Include="WindowsInput\Native\NativeMethods.cs" />
+    <Compile Include="WindowsInput\Native\VirtualKeyCode.cs" />
+    <Compile Include="WindowsInput\Native\XButton.cs" />
+    <Compile Include="WindowsInput\WindowsInputDeviceStateAdaptor.cs" />
+    <Compile Include="WindowsInput\WindowsInputMessageDispatcher.cs" />
+    <Compile Include="WindowsSimulator\SimulatorServer.cs" />
+    <Compile Include="XmlSerialization.cs" />
+    <Page Include="Controls\HotkeyControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\KControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Link.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ListViewX.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\OperationsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\OperationSingleControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\positionwrapper.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ScreenBorderButtonControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ScreenBorderDetailControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="window\windowinfo.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="assets\tray_red.ico" />
+    <Resource Include="assets\tray_stop_border.ico" />
+    <Resource Include="assets\white_black_border_16.ico" />
+    <Resource Include="assets\white_black_border_24.ico" />
+    <Resource Include="OneQuick.ico" />
+    <Resource Include="white_black_border_24.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

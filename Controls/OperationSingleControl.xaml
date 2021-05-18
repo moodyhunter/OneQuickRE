@@ -1,0 +1,155 @@
+<UserControl
+	x:Class="OneQuick.Controls.OperationSingleControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:OneQuick.Controls" >
+    <Grid>
+        <StackPanel
+			DataContext="{Binding RelativeSource={RelativeSource AncestorType=UserControl}}">
+            <FrameworkElement.Resources>
+                <ResourceDictionary>
+                    <Style
+						TargetType="{x:Type FrameworkElement}"
+						x:Key="Collapsed">
+                        <Setter
+							Property="Visibility"
+							Value="Collapsed" />
+                    </Style>
+                    <Style
+						TargetType="{x:Type FrameworkElement}"
+						BasedOn="{StaticResource Collapsed}"
+						x:Key="SendKeyVisible">
+                        <Style.Triggers>
+                            <DataTrigger
+								Value="SendKey"
+								Binding="{Binding ElementName=ComboBox, Path=SelectedItem.Tag}">
+                                <Setter
+									Property="Visibility"
+									Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                    <Style
+						TargetType="{x:Type FrameworkElement}"
+						BasedOn="{StaticResource Collapsed}"
+						x:Key="SendTextVisible">
+                        <Style.Triggers>
+                            <DataTrigger
+								Value="SendText"
+								Binding="{Binding ElementName=ComboBox, Path=SelectedItem.Tag}">
+                                <Setter
+									Property="Visibility"
+									Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                    <Style
+						TargetType="{x:Type FrameworkElement}"
+						BasedOn="{StaticResource Collapsed}"
+						x:Key="RumCmdVisible">
+                        <Style.Triggers>
+                            <DataTrigger
+								Value="RunCmd"
+								Binding="{Binding ElementName=ComboBox, Path=SelectedItem.Tag}">
+                                <Setter
+									Property="Visibility"
+									Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ResourceDictionary>
+            </FrameworkElement.Resources>
+            <ComboBox
+				Name="ComboBox"
+				MaxDropDownHeight="1024"
+				SelectionChanged="ComboBox_SelectionChanged">
+                <ComboBoxItem
+					Name="NoneItem"
+					Tag="None"
+					IsSelected="True"
+					Content="Default" />
+                <ComboBoxItem
+					Name="BlockItem"
+					Tag="Block"
+					Content="Block" />
+                <Separator />
+                <ComboBoxItem
+					Name="SendKeyItem"
+					Tag="SendKey"
+					Content="Send Key" />
+                <ComboBoxItem
+					Name="RunCmdItem"
+					Tag="RunCmd"
+					Content="Run Command" />
+                <ComboBoxItem
+					Name="SendTextItem"
+					Tag="SendText"
+					Content="Send Text" />
+                <Separator />
+                <ComboBoxItem
+					Name="VolumeUpItem"
+					Tag="VolumeUp"
+					Content="Volume: Up" />
+                <ComboBoxItem
+					Name="VolumeDownItem"
+					Tag="VolumeDown"
+					Content="Volume: Down" />
+                <ComboBoxItem
+					Name="VolumeMuteItem"
+					Tag="VolumeMute"
+					Content="Volume: Mute" />
+                <Separator />
+                <ComboBoxItem
+					Name="MediaPrevItem"
+					Tag="MediaPrev"
+					Content="Media: Prev" />
+                <ComboBoxItem
+					Name="MediaNextItem"
+					Tag="MediaNext"
+					Content="Media: Next" />
+                <ComboBoxItem
+					Name="MediaPlayPauseItem"
+					Tag="MediaPlayPause"
+					Content="Media: Play/Pause" />
+                <Separator />
+                <ComboBoxItem
+					Name="OpacityUpItem"
+					Tag="OpacityUp"
+					Content="Win: Opacity Up"  />
+                <ComboBoxItem
+					Name="OpacityDownItem"
+					Tag="OpacityDown"
+					Content="Win: Opacity Down" />
+                <ComboBoxItem
+					Name="TopmostItem"
+					Tag="ToggleTopmost"
+					Content="Win: Toggle Topmost" />
+                <Separator />
+                <ComboBoxItem
+					Name="MonitorOffItem"
+					Tag="MonitorOff"
+					Content="Monitor: Off" />
+                <ComboBoxItem
+					Name="SuspendedItem"
+					Tag="PowerSuspended"
+					Content="Power: Suspend" />
+                <ComboBoxItem
+					Name="HibernateItem"
+					Tag="PowerHibernate"
+					Content="Power: Hibernate" />
+            </ComboBox>
+            <DockPanel
+				Style="{StaticResource SendKeyVisible}">
+                <local:KControl
+					K="{Binding OperationKey}" />
+            </DockPanel>
+            <DockPanel
+				Style="{StaticResource SendTextVisible}">
+                <TextBox
+					Text="{Binding OperationText, UpdateSourceTrigger=PropertyChanged}" />
+            </DockPanel>
+            <DockPanel
+				Style="{StaticResource RumCmdVisible}">
+                <TextBox
+					Text="{Binding OperationCmd, UpdateSourceTrigger=PropertyChanged}" />
+            </DockPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>
