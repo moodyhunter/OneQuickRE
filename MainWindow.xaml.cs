@@ -5,10 +5,8 @@ using OneQuick.Notification;
 using OneQuick.SysX;
 using OneQuick.WindowsEvents;
 using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -19,12 +17,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Markup;
 using System.Windows.Threading;
 
 namespace OneQuick
 {
-    public partial class MainWindow : Window, INotifyPropertyChanged, IStyleConnector
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         public bool WindowsHookEnable
         {
@@ -52,36 +49,6 @@ namespace OneQuick
             }
         }
 
-        public Visibility ReleaseCheckVisibility => G.ReleaseCheck.ToVisibility();
-
-        public Visibility Debug_Visibility => DEBUG_MODE.ToVisibility();
-
-        public bool DEBUG_MODE
-        {
-            get => _debug_mode;
-            set
-            {
-                if (_debug_mode != value)
-                {
-                    string actionLabel = "DEBUG_MODE_" + (value ? "True" : "False");
-                    _debug_mode = value;
-                    if (!_debug_mode)
-                    {
-                        LogListenerEnable = false;
-                        MainTabControl.SelectedItem = About_TabItem;
-                    }
-                    OnPropertyChanged("DEBUG_MODE");
-                    OnPropertyChanged("Debug_Visibility");
-                }
-            }
-        }
-
-        public string LiteOrProLocal => "PRO!";
-
-        public string AppNameLocal => AppName + " (" + LiteOrProLocal + ")";
-
-        public string TitleOnWindow => (G.ReleaseCheck ? "<Release Test>" : AppNameLocal) + (G.DEBUG ? " //DEBUG: F11 Exit." : "");
-
         public string AboutUsingInfo
         {
             get
@@ -98,34 +65,21 @@ namespace OneQuick
             }
         }
 
-        public bool SubscribeInfoUnderLine => LitePrivilege;
-
-        public string SubscribeInfoText => "Haha";
-
-
         public MainWindow()
         {
             DateTime now = DateTime.Now;
             InitializeComponent();
             Log.Info(string.Format("{0} {1} {2}, {3}", new object[]
                 {
-                    AppCodeName,
+                    "OneQuick",
                     ArchStr,
                     VersionObj,
                     Info.OsFullName
                 }));
+            Log.Listener += LogAddLine;
             Log.Info(Environment.CommandLine);
             InitializeTrayIcon();
             G.SetVariables(this, TrayIcon);
-            if (G.IsDesignTime)
-            {
-                DEBUG_MODE = true;
-                Log.Debug(new string[]
-                {
-                    "[MainWindow] IsDesignTime: return;"
-                });
-                return;
-            }
             if (!IsNewInstance())
             {
                 ShowExistInstance();
@@ -134,63 +88,44 @@ namespace OneQuick
             }
             CheckPrivilege(true);
             UpgradeBefore();
-            bool flag2 = !File.Exists(PreferenceFilePath);
+            bool laststate = !File.Exists(PreferenceFilePath);
             if (!InitPreference())
             {
                 Exit(false);
                 return;
             }
             InitConfig();
-            if (flag2)
+            if (laststate)
             {
-                Log.Info(new string[]
-                {
-                    "No preferece file before, it's new install!"
-                });
+                Log.Info(new string[] { "No preferece file before, it's new install!" });
             }
-            else if (Preference.LastRunVersion != VersionP3)
-            {
-                Log.Info(new string[]
-                {
-                    "Last run version != current version, it's update!"
-                });
-                Preference.NewPushNumber();
-            }
-            UpgradeAfter();
             Preference.RunTimes++;
             TrayIcon.Visible = true;
             Command_Init();
+
+            {
+                _isAutorun = Reg.IsAutorun("OneQuick", CurrentExePath);
+                OnPropertyChanged("IsAutorun");
+            }
+
             SBC_LT = true;
             MainTabControl.SelectedItem = About_TabItem;
+
             EntryServer.EnableChanged += EntryServer_EnableChanged;
             EventsServer.HotkeyDown += EventsServer_HotkeyDown_Buildin;
             EventsServer.HotkeyDown += EventsServer_HotkeyDown_Configs;
-            if (Environment.Is64BitOperatingSystem != Environment.Is64BitProcess)
-            {
-                Notify.ShowMsg("Tip_ProcessSystemBitNotMatch", "");
-            }
-            DispatcherTimer dispatcherTimer = new DispatcherTimer
-            {
-                Interval = G.GlobalTimerInterval
-            };
+
+            DispatcherTimer dispatcherTimer = new DispatcherTimer { Interval = G.GlobalTimerInterval };
             dispatcherTimer.Tick += MainWindow_Timer_Tick;
             dispatcherTimer.Start();
             IsEntryServerRunning = true;
             WindowsHookEnable = true;
-            //ReloadPurchaseInfo(false); 
-            Log.Verbose(new string[]
-            {
-                "End of MainWindow"
-            });
+            Log.Verbose(new string[] { "End of MainWindow" });
         }
 
         private void IntervalWork()
         {
-            Log.Verbose(new string[]
-            {
-                "IntervalWork"
-            });
-            CheckPrivilege(false);
+            Log.Verbose(new string[] { "IntervalWork" });
             if (DateTime.Now - LastSavePreferenceDT > G.SavePreferenceInterval)
             {
                 try
@@ -242,44 +177,6 @@ namespace OneQuick
             {
                 File.Move(text3, PreferenceFilePath);
                 Notify.ShowMsg("Preference file name Change From 'preference.config' to 'preference.cfg'", "OneQuick Preference File Name Changed");
-            }
-        }
-
-        private void UpgradeAfter()
-        {
-            if (Preference.LastRunVersion.StartsWith("0"))
-            {
-                Log.Info(new string[]
-                {
-                    "Upgrade 0.* -> 1.0, QuickSearch, CustomKeys, KeyMapping will be set."
-                });
-                Configuration prodVersion = DefConfig.ProdVersion;
-                if (Configur.QuickSearch.Count == 0)
-                {
-                    Configur.QuickSearch = prodVersion.QuickSearch;
-                }
-                if (Configur.CustomKeys.Count == 0)
-                {
-                    Configur.CustomKeys = prodVersion.CustomKeys;
-                }
-                if (Configur.KeyMapping.Count == 0)
-                {
-                    Configur.KeyMapping = prodVersion.KeyMapping;
-                }
-                string[] files = Directory.GetFiles(G.AppDataFolder, "OneQuick.config.*.bkp", SearchOption.TopDirectoryOnly);
-                if (files.Length != 0)
-                {
-                    foreach (string text in files)
-                    {
-                        string destFileName = Path.Combine(ConfigBackupFolder, Path.GetFileName(text));
-                        File.Move(text, destFileName);
-                    }
-                }
-                Preference.LastRunVersion = "1.0.0";
-            }
-            if (Preference.LastRunVersion.StartsWith("1.0"))
-            {
-                Preference.LastRunVersion = "1.1.0";
             }
         }
 
@@ -381,14 +278,6 @@ namespace OneQuick
         private void Exit(object sender, RoutedEventArgs e)
         {
             Exit(true);
-        }
-
-        private void AskExit(object sender = null, RoutedEventArgs e = null)
-        {
-            if (Notify.AskYesNo("Tip_Exit", AppName))
-            {
-                Exit(true);
-            }
         }
 
         private void ToggleRunStop(object sender = null, RoutedEventArgs e = null)
@@ -526,12 +415,6 @@ namespace OneQuick
             RoutedCommand routedCommand = new RoutedCommand();
             routedCommand.InputGestures.Add(new KeyGesture(Key.Escape));
             CommandBindings.Add(new CommandBinding(routedCommand, new ExecutedRoutedEventHandler(CloseWindow)));
-            RoutedCommand routedCommand2 = new RoutedCommand();
-            routedCommand2.InputGestures.Add(new KeyGesture(Key.D, ModifierKeys.Alt | ModifierKeys.Shift));
-            CommandBindings.Add(new CommandBinding(routedCommand2, delegate (object o, ExecutedRoutedEventArgs e)
-            {
-                DEBUG_MODE = !DEBUG_MODE;
-            }));
         }
 
 
@@ -546,23 +429,6 @@ namespace OneQuick
                     Notify.ShowMsg("作者从2013年接触AHK，几经修改，15年OneQuick成型，\n16年发布并开始准备WPF版，18年1.0版正式发布。\n是您的支持在鼓励着OneQuick继续前进。", "感谢使用OneQuick");
                 }
             }
-        }
-
-        public string FeedbackInfo => string.Concat(new string[]
-                {
-                    AppCodeName,
-                    " ",
-                    ArchStr,
-                    " ",
-                    VersionObj.ToString(),
-                    "\r\n",
-                    Info.OsFullName
-                });
-
-        private void CopyFeedbackInfo(object sender, RoutedEventArgs e)
-        {
-            Clipboard.SetText(FeedbackInfo);
-            Notify.PopNewToast(FeedbackInfo, "Copied");
         }
 
         public Preference Preference
@@ -667,7 +533,6 @@ namespace OneQuick
 
         private void SavePreference()
         {
-            Preference.LastRunVersion = VersionP3;
             XmlSerialization.SaveToFile(Preference, PreferenceFilePath, true);
         }
 
@@ -1170,14 +1035,7 @@ namespace OneQuick
         }
         public bool IsOpen => Visibility != Visibility.Hidden;
         public TrayIcon TrayIcon { get; private set; }
-        public string TrayiconText => string.Concat(new string[]
-                {
-                    AppName,
-                    " v",
-                    VersionP3,
-                    "\n",
-                    (IsEntryServerRunning && WindowsHookEnable) ? "Running": "Stopped"
-                });
+        public string TrayiconText => string.Concat(new string[] { "OneQuick\n", (IsEntryServerRunning && WindowsHookEnable) ? "Running" : "Stopped" });
 
         private Icon TrayIconIcon => !WindowsHookEnable
                     ? Properties.Resources.tray_red
@@ -1237,44 +1095,11 @@ namespace OneQuick
         {
             TrayIcon.SetContextMenu(new List<TrayMenuItemBase>
             {
-                new TrayMenuItem("WindowShow", delegate()
-                {
-                    ShowWindow(null, null);
-                })
-                {
-                    Default = true
-                },
+                new TrayMenuItem("Main Window", delegate() { ShowWindow(null, null); }) { Default = true },
                 new TrayMenuSeperator(),
-                new TrayMenuItem("HomePage", delegate()
-                {
-                    OpenLink_HomePage(null, null);
-                }),
-                new TrayMenuItem("StorePage", delegate()
-                {
-                    OpenLink_StoreVersionUrlOrProtocol(null, null);
-                }),
-                new TrayMenuSeperator(),
-                new TrayMenuItem("ServerRun", delegate()
-                {
-                    IsEntryServerRunning = !IsEntryServerRunning;
-                })
-                {
-                    Checked = IsEntryServerRunning
-                },
-                new TrayMenuItem("Advanced")
-                {
-                    SubItems = new List<TrayMenuItemBase>
-                    {
-                        new TrayMenuItem("Window Hook", delegate() {WindowsHookEnable = !WindowsHookEnable;})
-                        {
-                            Checked = WindowsHookEnable
-                        }
-                    }
-                },
-                new TrayMenuItem("Exit", delegate()
-                {
-                    AskExit(null, null);
-                })
+                new TrayMenuItem("Toggle Running", delegate() { IsEntryServerRunning = !IsEntryServerRunning; }) { Checked = IsEntryServerRunning },
+                new TrayMenuItem("Toggle Hook", delegate() { WindowsHookEnable = !WindowsHookEnable; }) { Checked = WindowsHookEnable },
+                new TrayMenuItem("Exit", delegate() { Exit(null, null); })
             });
         }
 
@@ -1290,70 +1115,15 @@ namespace OneQuick
             propertyChanged(this, new PropertyChangedEventArgs(Name));
         }
 
-        public string TitleOnUpdate => AppName + " v" + VersionP3 + " Updater";
-        public string Author => "xujinkai";
-        public string AuthorUrl => "http://xujinkai.net/?onequick";
-        public string AuthorZhiUrl => "https://www.zhihu.com/people/xxxjin/activities";
-        public string WeiboUrl => "http://weibo.com/onequick";
-        public string Weibo_ShowText => "微博(OneQuick工具)";
-        public string StoreVersionUrl => "https://www.microsoft.com/store/apps/9pfn5k6qxt46";
-        public string StoreVersionProtocolUri => "ms-windows-store://pdp/?productid=9pfn5k6qxt46";
-        public void OpenLink_StoreVersionUrlOrProtocol(object sender = null, RoutedEventArgs e = null)
-        {
-            if (int.Parse(Info.CurrentBuild) >= 14393)
-            {
-                Cmd.Run(StoreVersionProtocolUri, "", true);
-                return;
-            }
-            Cmd.OpenLink(StoreVersionUrl);
-        }
-        public string AppUrl => "http://onequick.org/?f=app";
-        public string AppUrl_Show => "OneQuick.org";
-
-        public string PrivacyPolicyUrl => "http://onequick.org/privacy-policy";
-
-        public string FeedbackUrl => "http://onequick.org/go?feedback";
-
-        public string ChangeLogUrl => "http://onequick.org/go?change-log";
-
-        public string DocsOnlineUrl => "http://onequick.org/go?docs";
-
-        private void OpenLink_HomePage(object sender = null, RoutedEventArgs e = null)
-        {
-            Cmd.OpenLink(AppUrl);
-        }
-
-        private void OpenLink_Docs(object sender = null, RoutedEventArgs e = null)
-        {
-            Cmd.OpenLink(DocsOnlineUrl);
-        }
-
-        private void OpenLink_ChangeLog(object sender = null, RoutedEventArgs e = null)
-        {
-            Cmd.OpenLink(ChangeLogUrl);
-        }
-
-        public string AppName => "OneQuick";
-
-        public bool StoreVersion => G.STORE;
-
-        public bool DesktopVersion => G.DESKTOP;
-
-        public string DesktopOrStore => !G.STORE ? "Desktop" : "Store";
-
-        public string VersionP3 => VersionObj.ToString(3);
-
         public Version VersionObj => VersionAssembly;
 
         public Version VersionAssembly => Assembly.GetExecutingAssembly().GetName().Version;
 
-        public Version VersionFile => new Version(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion);
+        public Visibility ENV_DEBUG_Visibility => Visibility.Visible;
 
-        public Visibility ENV_DEBUG_Visibility => G.DEBUG.ToVisibility();
+        public Visibility ENV_STORE_Visibility => Visibility.Visible;
 
-        public Visibility ENV_STORE_Visibility => G.STORE.ToVisibility();
-
-        public Visibility ENV_DESKTOP_Visibility => G.DESKTOP.ToVisibility();
+        public Visibility ENV_DESKTOP_Visibility => Visibility.Visible;
 
         public bool X64Version => Environment.Is64BitProcess;
 
@@ -1389,7 +1159,6 @@ namespace OneQuick
 
         public Visibility NeedProVersionTipVisibility => (LitePrivilege && IsConfigTabSelected).ToVisibility();
 
-        public string AppCodeName => AppName + DesktopOrStore;
         public void OnPrivilegeUpdated()
         {
             Log.Debug(new string[]
@@ -1863,16 +1632,6 @@ namespace OneQuick
             Notify.PopNewToast("test message", null);
         }
 
-        private void ClearAllToast(object sender, RoutedEventArgs e)
-        {
-            Notify.ClearToast();
-        }
-
-        private void SetWindowTitleDefault(object sender, RoutedEventArgs e)
-        {
-            Title = TitleOnWindow;
-        }
-
         private void ThrowNewException(object sender, RoutedEventArgs e)
         {
             throw new Exception("ThrowNewException()");
@@ -1921,28 +1680,19 @@ namespace OneQuick
         {
             EntrysListView.ItemsSource = EntryServer_Entrys_byOrder;
         }
-
-        public bool LogListenerEnable
+        public bool IsAutorun
         {
-            get => _logListenerEnable;
+            get => _isAutorun;
             set
             {
-                if (_logListenerEnable != value)
-                {
-                    if (value)
-                    {
-                        Log.Listener += Log_Listener;
-                    }
-                    else
-                    {
-                        Log.Listener -= Log_Listener;
-                    }
-                    _logListenerEnable = value;
-                    OnPropertyChanged("LogListenerEnable");
-                }
+                SetAutorunState(value);
             }
         }
-
+        private void SetAutorunState(bool enable)
+        {
+            _isAutorun = enable;
+            Reg.SetAutorun("OneQuick", CurrentExePath, enable);
+        }
         private void LogAddLine(string s)
         {
             if ((DateTime.Now - LastLogTime).TotalSeconds > 1.0)
@@ -1954,55 +1704,18 @@ namespace OneQuick
             ScrollViewer_Log.ScrollToEnd();
         }
 
-        private void Log_Listener(string log)
-        {
-            Application.Current.Dispatcher.Invoke(delegate ()
-            {
-                LogAddLine(log);
-            });
-        }
-
         private void Button_Events_Clear_Click(object sender, RoutedEventArgs e)
         {
             EventsLogBox.Clear();
         }
 
-        [DebuggerNonUserCode]
-        [GeneratedCode("PresentationBuildTasks", "4.0.0.0")]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        void IStyleConnector.Connect(int connectionId, object target)
-        {
-            switch (connectionId)
-            {
-                case 38:
-                    ((Button)target).Click += this.ConfigEntry_LoadKind;
-                    return;
-                case 39:
-                    ((Button)target).Click += this.ConfigEntry_ClearKind;
-                    return;
-                case 40:
-                    ((Button)target).Click += this.ConfigEntry_Select;
-                    return;
-                case 41:
-                    ((Button)target).Click += this.ConfigEntry_Edit;
-                    return;
-                default:
-                    return;
-            }
-        }
 
+        private bool _isAutorun;
         private bool _isEntryServerRunning;
-
-        private bool _debug_mode;
-
         private DateTime LastCheckAppdataFolderDT;
-
         private DateTime LastSavePreferenceDT;
-
         private static Mutex mutex;
-
         private static bool isNewInstance;
-
         private Dictionary<K, Action> ConfigHotkeyDict = new Dictionary<K, Action>();
         private string mainwindow_preview_keypress = "";
         private Preference _preference;
@@ -2010,9 +1723,6 @@ namespace OneQuick
         private bool _configObjectChanged;
         private Configuration _config;
         private FileSystemWatcher _configFileWatcher;
-        public static readonly string AddonsInfoUrl = (!G.RedirectToLocalUrl) ? "https://onequick.org/addons-information.xml" : "http://127.0.0.1/addons-information.xml";
-        public static readonly string UpdateInfoUrl = (!G.RedirectToLocalUrl) ? "https://onequick.org/update-information.xml" : "http://127.0.0.1/update-information.xml";
-        private bool _logListenerEnable;
         private DateTime LastLogTime = DateTime.Now;
         public delegate void ConfigFilePathChangedDelegate(string path);
     }

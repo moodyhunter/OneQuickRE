@@ -12,10 +12,6 @@ namespace OneQuick
     {
         static G()
         {
-            NetOutputDetailResponse = DEBUG && false;
-            GaMock = DEBUG && false;
-            NetEnable = RELEASE || true;
-            LogTraceEvents = DEBUG && false;
             GlobalTimerInterval = new TimeSpan(0, 10, 0);
             SavePreferenceInterval = new TimeSpan(0, 30, 0);
             StoreCheckLicenseInterval = new TimeSpan(0, 6, 0, 0);
@@ -25,7 +21,7 @@ namespace OneQuick
             _isDesignTime = DesignerProperties.GetIsInDesignMode(new DependencyObject());
             MyDocumentsFolder = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             AppDataFolder = Helper.FolderReturn(Path.Combine(MyDocumentsFolder, "OneQuick"));
-            LogFilePath = Path.Combine(AppDataFolder, "OneQuick" + (IsDesignTime ? ".DesignTime" : "") + ".log");
+            LogFilePath = Path.Combine(AppDataFolder, "OneQuick.log");
         }
 
         public static void SetVariables(MainWindow window, TrayIcon trayIcon)
@@ -47,17 +43,6 @@ namespace OneQuick
             preference.TriggerCounter = triggerCounter + 1L;
         }
 
-        public static bool IsDesignTime => _isDesignTime;
-        public static bool DEBUG => false;
-        public static bool RELEASE => true;
-        public static bool STORE => true;
-        public static bool DESKTOP => false;
-        public static bool ReleaseCheck = false;
-        public static bool RedirectToLocalUrl;
-        public static bool NetOutputDetailResponse;
-        public static bool GaMock;
-        public static bool NetEnable;
-        public static bool LogTraceEvents;
         public const int LVR_CustomHotkeyCount = 1;
         public const int LVR_KeyMappingCount = 1;
         public const int InputRememberSize = 10;

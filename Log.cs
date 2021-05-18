@@ -20,7 +20,6 @@ namespace OneQuick
 
         public static bool WriteLogToConsoleInDebug { get; set; } = false;
 
-        public static bool TraceEventsSwitch => G.LogTraceEvents;
 
         static Log()
         {
@@ -68,13 +67,9 @@ namespace OneQuick
 
         public static bool Trace(params string[] contents)
         {
-            if (TraceEventsSwitch)
-            {
-                string obj = JoinContents(contents);
-                Listener?.Invoke(obj);
-                return true;
-            }
-            return false;
+            string obj = JoinContents(contents);
+            Listener?.Invoke(obj);
+            return true;
         }
 
         public static bool Verbose(params string[] contents)

@@ -81,7 +81,7 @@ namespace OneQuick.Core.Operations
 
         public override string ToString()
         {
-            return "op_" + OperationEnum.ToString().ToLower();
+            return OperationEnum.ToString().ToLower();
         }
 
         private BuildinOperationEnum _winOp;

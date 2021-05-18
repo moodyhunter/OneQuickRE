@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace OneQuick.Notification
 {
@@ -28,30 +27,9 @@ namespace OneQuick.Notification
             return AskYesNo("AskOverWriteFile", "");
         }
 
-        public static void PopNewToast(string Text, string Title = null)
+        public static void PopNewToast(string Text, string Title = "OneQuick")
         {
-            if (Title == null)
-            {
-                Title = "OneQuick";
-            }
-            if (G.STORE)
-            {
-                Task.Run(delegate ()
-                {
-                    ClearToast();
-                    //MyNotificationActivator.Pop(Text);
-                });
-                return;
-            }
             G.TrayIcon.Ballon(Title, Text, 5000);
-        }
-
-        public static void ClearToast()
-        {
-            if (G.STORE)
-            {
-                //MyNotificationActivator.Clear();
-            }
         }
     }
 }

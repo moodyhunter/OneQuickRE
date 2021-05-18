@@ -38,7 +38,7 @@ namespace OneQuick.WindowsEvents
 
         private static int KeyboardLLHookProc(int nCode, int wParam, IntPtr lParam)
         {
-            if (nCode >= 0 && Log.TraceEventsSwitch)
+            if (nCode >= 0)
             {
                 /*ref*/
                 KeyboardHookStruct ptr = (KeyboardHookStruct)Marshal.PtrToStructure(lParam, typeof(KeyboardHookStruct));
@@ -472,38 +472,32 @@ namespace OneQuick.WindowsEvents
                     Enable = false;
                     SimulatorServer.KeyDown((K)num2);
                     Enable = true;
-                    if (Log.TraceEventsSwitch)
+                    Log.Trace(new string[]
                     {
-                        Log.Trace(new string[]
+                        string.Format("MouseLLHookProc, KeyRemapSimu, ↓ {0} >> {1} ({2}, {3})", new object[]
                         {
-                            string.Format("MouseLLHookProc, KeyRemapSimu, ↓ {0} >> {1} ({2}, {3})", new object[]
-                            {
-                                mouseEventArgs.Button,
-                                (K)num2,
-                                mouseEventArgs.X,
-                                mouseEventArgs.Y
-                            })
-                        });
-                    }
+                            mouseEventArgs.Button,
+                            (K)num2,
+                            mouseEventArgs.X,
+                            mouseEventArgs.Y
+                        })
+                    });
                     return -1;
                 }
                 if (flag2)
                 {
                     Enable = false;
                     SimulatorServer.KeyUp((K)num2);
-                    if (Log.TraceEventsSwitch)
+                    Log.Trace(new string[]
                     {
-                        Log.Trace(new string[]
+                        string.Format("MouseLLHookProc, KeyRemapSimu,  ↑{0} >> {1} ({2}, {3})", new object[]
                         {
-                            string.Format("MouseLLHookProc, KeyRemapSimu,  ↑{0} >> {1} ({2}, {3})", new object[]
-                            {
-                                mouseEventArgs.Button,
-                                (K)num2,
-                                mouseEventArgs.X,
-                                mouseEventArgs.Y
-                            })
-                        });
-                    }
+                            mouseEventArgs.Button,
+                            (K)num2,
+                            mouseEventArgs.X,
+                            mouseEventArgs.Y
+                        })
+                    });
                     Enable = true;
                     return -1;
                 }
@@ -512,19 +506,16 @@ namespace OneQuick.WindowsEvents
                     Enable = false;
                     SimulatorServer.KeyDown((K)num2);
                     SimulatorServer.KeyUp((K)num2);
-                    if (Log.TraceEventsSwitch)
+                    Log.Trace(new string[]
                     {
-                        Log.Trace(new string[]
+                        string.Format("MouseLLHookProc, KeyRemapSimu, {0}, {1} ({2}, {3})", new object[]
                         {
-                            string.Format("MouseLLHookProc, KeyRemapSimu, {0}, {1} ({2}, {3})", new object[]
-                            {
-                                (mouseEventArgs.Delta > 0) ? "↑↑" : "↓↓",
-                                (K)num2,
-                                mouseEventArgs.X,
-                                mouseEventArgs.Y
-                            })
-                        });
-                    }
+                            (mouseEventArgs.Delta > 0) ? "↑↑" : "↓↓",
+                            (K)num2,
+                            mouseEventArgs.X,
+                            mouseEventArgs.Y
+                        })
+                    });
                     Enable = true;
                     return -1;
                 }

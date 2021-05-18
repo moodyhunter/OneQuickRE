@@ -9,11 +9,6 @@ namespace OneQuick.Config
 
         public string LauncherName { get; set; }
 
-        public bool IsStoreVersion { get; set; }
-
-        [XmlIgnore]
-        public bool IsDesktopVersion => !IsStoreVersion;
-
         public bool IsPrerelease { get; set; }
 
         [XmlIgnore]
@@ -38,7 +33,6 @@ namespace OneQuick.Config
             return new VersionItem
             {
                 VersionObj = G.MainWindow.VersionObj,
-                IsStoreVersion = G.STORE,
                 IsPrerelease = G.MainWindow.Preference.CheckPrerelease,
                 PushPercentage = G.MainWindow.Preference.PushNumber
             };
@@ -46,7 +40,7 @@ namespace OneQuick.Config
 
         public bool MatchAndNewer(VersionItem current)
         {
-            return (!IsPrerelease || current.IsPrerelease) && IsStoreVersion == current.IsStoreVersion && PushPercentage >= current.PushPercentage && VersionObj > current.VersionObj;
+            return (!IsPrerelease || current.IsPrerelease) && PushPercentage >= current.PushPercentage && VersionObj > current.VersionObj;
         }
     }
 }

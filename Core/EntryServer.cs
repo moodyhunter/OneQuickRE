@@ -62,19 +62,15 @@ namespace OneQuick.Core
 
         public static string DebugStatus()
         {
-            string text = "";
+            string text = "Status: ";
             return string.Concat(new object[]
             {
                 text,
-                _enableCounter,
-                "(",
-                TriggerList.Count,
-                "): ",
-                HotkeyTriggers.Count(),
-                ", ",
-                InputTriggers.Count(),
-                ", ",
-                NonMoveTriggers.Count()
+                "Counter: " + _enableCounter + " -- ",
+                "Count: " + TriggerList.Count +" -- ",
+                "Hotkey: " + HotkeyTriggers.Count() + " -- ",
+                "Input: "+ InputTriggers.Count() + " -- ",
+                "Hold: " + NonMoveTriggers.Count()
             });
         }
 
@@ -323,38 +319,35 @@ namespace OneQuick.Core
             {
                 HotkeySequence.RemoveAt(0);
             }
-            if (Log.TraceEventsSwitch)
+            string text = "";
+            text = string.Concat(new string[]
             {
-                string text = "";
-                text = string.Concat(new string[]
-                {
-                    text,
-                    isKeyDown ? "↓ " : " ↑",
-                    e.RawKeyCode.FormatString(),
-                    ": ",
-                    e.KeyData.FormatString()
-                });
-                text = string.Concat(new object[]
-                {
-                    text,
-                    "       ",
-                    KeyPressSequence.Length,
-                    ":",
-                    KeyPressSequence
-                });
-                text = string.Concat(new object[]
-                {
-                    text,
-                    "       ",
-                    HotkeySequence.Count,
-                    ":",
-                    string.Join(",", HotkeySequence)
-                });
-                Log.Trace(new string[]
-                {
-                    text
-                });
-            }
+                text,
+                isKeyDown ? "↓ " : " ↑",
+                e.RawKeyCode.FormatString(),
+                ": ",
+                e.KeyData.FormatString()
+            });
+            text = string.Concat(new object[]
+            {
+                text,
+                "       ",
+                KeyPressSequence.Length,
+                ":",
+                KeyPressSequence
+            });
+            text = string.Concat(new object[]
+            {
+                text,
+                "       ",
+                HotkeySequence.Count,
+                ":",
+                string.Join(",", HotkeySequence)
+            });
+            Log.Trace(new string[]
+            {
+                text
+            });
             bool flag = false;
             bool flag2 = false;
             foreach (HotkeyTrigger hotkeyTrigger in HotkeyTriggers)

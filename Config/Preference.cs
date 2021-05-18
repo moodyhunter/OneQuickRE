@@ -15,7 +15,6 @@ namespace OneQuick.Config
             TriggerCounter = 0L;
             CheckPrerelease = false;
             NewPushNumber();
-            LastRunVersion = G.MainWindow.VersionP3;
             FirstRunDT = DateTime.Now;
             _configPath = "";
             ConfigEntrys = new ObservableCollectionX<ConfigFileEntry>();
@@ -82,16 +81,6 @@ namespace OneQuick.Config
         public void NewPushNumber()
         {
             PushNumber = new Random().Next(0, 100);
-        }
-
-        public string LastRunVersion
-        {
-            get => _lastRunVersion;
-            set
-            {
-                _lastRunVersion = value;
-                OnPropertyChanged("LastRunVersion");
-            }
         }
 
         public DateTime FirstRunDT
@@ -196,8 +185,6 @@ namespace OneQuick.Config
         private bool _checkPrerelease;
 
         private int _pushNumber;
-
-        private string _lastRunVersion;
 
         private DateTime _firstRunDT;
 

@@ -1,5 +1,5 @@
 <Window
-	x:Class="OneQuick.MainWindow" 
+	x:Class="OneQuick.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
@@ -11,7 +11,7 @@
 	Height="500"
 	Width="966"
 	DataContext="{Binding RelativeSource={RelativeSource Self}}"
-	Title="{Binding TitleOnWindow}"
+	Title="OneQuick - Desktop"
 	PreviewKeyDown="MainWindow_PreviewKeyDown">
     <FrameworkElement.Resources>
         <ResourceDictionary>
@@ -62,61 +62,33 @@
     </FrameworkElement.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition
-				Height="20" />
-            <RowDefinition
-				Height="30" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="30" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Grid
-			Row="0">
-            <Menu
-				Margin="0">
-                <MenuItem
-					Header="Window">
-                    <MenuItem
-						IsCheckable="True"
-						Header="WindowTopmost"
-						IsChecked="{Binding Topmost}" />
-                    <MenuItem
-						Header="WindowHide"
-						Click="CloseWindow" />
+        <Grid Row="0">
+            <Menu Margin="0">
+                <MenuItem Header="Window">
+                    <MenuItem IsCheckable="True" Header="Topmost" IsChecked="{Binding Topmost}" />
+                    <MenuItem Header="Hide" Click="CloseWindow" />
                     <Separator />
-                    <MenuItem
-						Header="Exit"
-						Click="AskExit" />
+                    <MenuItem Header="Exit" Click="Exit" />
                 </MenuItem>
             </Menu>
         </Grid>
         <Grid
 			Row="1">
             <DockPanel>
-                <ToolBar
-					ToolBarTray.IsLocked="True"
-					Header="">
-                    <Button
-						FontWeight="Bold"
-						Padding="2,2,7,2"
-						Click="ToggleRunStop">
+                <ToolBar ToolBarTray.IsLocked="True" Header="">
+                    <Button FontWeight="Bold" Padding="2,2,7,2" Click="ToggleRunStop">
                         <FrameworkElement.Style>
-                            <Style
-								TargetType="{x:Type Button}">
-                                <Setter
-									Property="Foreground"
-									Value="#FF008000" />
-                                <Setter
-									Property="Content"
-									Value="Running" />
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Foreground" Value="#FF008000" />
+                                <Setter Property="Content" Value="Running" />
                                 <Style.Triggers>
-                                    <DataTrigger
-										Value="False"
-										Binding="{Binding IsEntryServerRunning, Mode=OneWay}">
-                                        <Setter
-											Property="Foreground"
-											Value="#FFFF0000" />
-                                        <Setter
-											Property="Content"
-											Value="Stopped" />
+                                    <DataTrigger Value="False" Binding="{Binding IsEntryServerRunning, Mode=OneWay}">
+                                        <Setter Property="Foreground" Value="#FFFF0000" />
+                                        <Setter Property="Content" Value="Stopped" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -136,32 +108,11 @@
                 </ToolBar>
                 <ToolBar
 					ToolBarTray.IsLocked="True"
-					Visibility="{Binding Debug_Visibility}">
-                    <Button
-						Content="Exit"
-						Click="Exit" />
-                    <Button
-						Content="Notepad"
-						Click="Run_Notepad" />
-                </ToolBar>
-                <ToolBar
-					ToolBarTray.IsLocked="True"
-					Visibility="Visible"
 					IsVisibleChanged="EntryServerStatus_ToolBar_IsVisibleChanged">
                     <Button
 						Name="EntryServerShortStatus"
-						Content="EntryServer_Status"
+						Content="Status"
 						Click="EntryServerShortStatus_Refresh" />
-                </ToolBar>
-                <ToolBar
-					ToolBarTray.IsLocked="True"
-					Visibility="{Binding Debug_Visibility}">
-                    <Button
-						Content="Obj, File: " />
-                    <Button
-						Content="{Binding ConfigObjectChanged}" />
-                    <Button
-						Content="{Binding ConfigFileChanged}" />
                 </ToolBar>
             </DockPanel>
         </Grid>
@@ -194,7 +145,7 @@
 			SelectionChanged="MainTabControl_SelectionChanged">
             <TabItem
 				Name="ScreenBorder_TabItem"
-				Header="screen_border">
+				Header="Screen Border" Height="22" VerticalAlignment="Top">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition
@@ -321,7 +272,7 @@
             </TabItem>
             <TabItem
 				Name="QuickSearch_TabItem"
-				Header="copy_search">
+				Header="Copy Search">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition
@@ -437,7 +388,7 @@
             </TabItem>
             <TabItem
 				Name="ReplacePhrase_TabItem"
-				Header="phrase_replace">
+				Header="Phrase Replace">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition
@@ -530,7 +481,7 @@
             </TabItem>
             <TabItem
 				Name="HotkeyRemap_TabItem"
-				Header="hotkey_remap">
+				Header="HotKey Remap">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
@@ -587,7 +538,7 @@
 																Value="{x:Null}">
 																<Setter
 																	Property="Text"
-																	Value="op_default" />
+																	Value="Default" />
 															</DataTrigger>
 														</Style.Triggers>
 													</Style>
@@ -637,7 +588,7 @@
             </TabItem>
             <TabItem
 				Name="KeyMapping_TabItem"
-				Header="key_mapping">
+				Header="Key Remap">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition
@@ -707,7 +658,7 @@
             </TabItem>
             <TabItem
 				Name="BuildinFuncs_TabItem"
-				Header="buildin_functions" HorizontalAlignment="Right" Width="64">
+				Header="Builtin Functions" HorizontalAlignment="Right" Width="64">
                 <Grid>
                     <FrameworkElement.Resources>
                         <ResourceDictionary>
@@ -1081,10 +1032,10 @@
 										Orientation="Horizontal">
                                         <TextBlock
 											FontSize="22"
-											Text="{Binding AppNameLocal}" />
+											Text="OneQuick" />
                                         <TextBlock
 											Margin="10,10,0,0"
-											Text="{Binding DesktopOrStore}" />
+											Text="Desktop Version" />
                                         <TextBlock
 											Margin="10,10,0,0"
 											Text="{Binding ArchStr}" />
@@ -1107,22 +1058,7 @@
                                             </Style>
                                         </ResourceDictionary>
                                     </FrameworkElement.Resources>
-                                    <WrapPanel
-										Orientation="Horizontal">
-                                        <control:Link
-											UriMargin="5"
-											PreText="HomePageShort"
-											UriText="{Binding AppUrl_Show}"
-											RunCommand="{Binding AppUrl}" />
-                                        <control:Link
-											UriMargin="5"
-											Margin="10,4,0,0"
-											UriText="{Binding Weibo_ShowText}"
-											RunCommand="{Binding WeiboUrl}" />
-                                    </WrapPanel>
-                                    <WrapPanel
-										Orientation="Horizontal"
-										Margin="0,1,0,0"/>
+                                    <WrapPanel Orientation="Horizontal" Margin="0,1,0,0"/>
                                 </StackPanel>
                             </StackPanel>
                             <StackPanel
@@ -1133,7 +1069,6 @@
                                 <TextBlock />
                                 <CheckBox
 									Name="AutorunCheckBox"
-									IsEnabled="False"
 									Content="Autorun"
 									IsChecked="{Binding IsAutorun}" />
                             </StackPanel>
@@ -1141,16 +1076,6 @@
 								Name="AboutInfo_Right"
 								MinWidth="150"
 								Margin="0,10,0,0">
-                                <StackPanel
-									Orientation="Horizontal">
-                                    <TextBlock
-										Foreground="#FFFF0000"
-										Text="InPromoTagText"
-										Visibility="{Binding UpdateInfo.PromoTag, FallbackValue=Collapsed, Converter={StaticResource BoolToVisibility}}" />
-                                </StackPanel>
-                                <control:Link
-									UriClick="CopyFeedbackInfo"
-									UriText="CopyEnvInfo" />
                                 <control:Link
 									RunCommand="{x:Static local:G.LogFilePath}"
 									UriText="LogFile" />
@@ -1220,8 +1145,7 @@
             </TabItem>
             <TabItem
 				Name="EventsTabItem"
-				Header="Log"
-				Visibility="{Binding Debug_Visibility}">
+				Header="Log">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition
@@ -1231,9 +1155,6 @@
                     <StackPanel
 						VerticalAlignment="Center"
 						Orientation="Horizontal">
-                        <CheckBox
-							Content="Listen"
-							IsChecked="{Binding LogListenerEnable}" />
                         <Button
 							Width="88"
 							Content="Clear"
